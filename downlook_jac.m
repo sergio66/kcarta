@@ -101,12 +101,21 @@ profileG = op_rtp_to_lbl2(1, refpro.glist, head, prof, refpro);
 
 %% determine temp interp weights for each continuum chunk
 freqX = (1:10000);  freqX = f0 + (freqX-1)*df;
+UseCKDTemp  = '5';
+iUseCKDTemp = -1;
 copt.cvers = CKD;
+if str2num(CKD) < 0
+  iUseCKDemp = +1;
+  copt.cvers = UseCKDTemp;
+end
 copt.cdir  = cdir;
 copt.cswt  = cswt;
 copt.cfwt  = cfwt;
 [ci1,ci2,ctw1,ctw2,cjtwlo,cjtwhi] = ...
    continuum_temp_interp_weights_jac(profileG, freqX, copt);
+if str2num(CKD) < 0
+  copt.cvers = CKD;
+end
 
 %tic
 %profile on -history
@@ -150,18 +159,27 @@ for cc = 1 : nchunk
       end
 
     iaCountNumVec(jj) = iNumVec;
-    
+
     if gid == 1
-      [cont,contjacT,contjacQ] = ...
+      if str2num(copt.cvers) > 0	
+        [cont,contjacT,contjacQ] = ...
          contjaccalc2(profileG,freq,copt,iDoJac,ci1,ci2,ctw1,ctw2,...
                       cjtwlo,cjtwhi);
-      jacTG = jacTG + contjacT;  
-      if length(intersect(iDoJac,1)) == +1
-        jacQG = jacQG + contjacQ; %% water lines + water cont jac
+        jacTG = jacTG + contjacT;  
+        if length(intersect(iDoJac,1)) == +1
+          jacQG = jacQG + contjacQ; %% water lines + water cont jac
         end
-      absc = absc + cont;
+        absc = absc + cont;
+      else
+	disp('CKD = -1 so no continuum')
+	cont = 0 * absc;	
+	contjacT = 0 * jacTG;
+        if length(intersect(iDoJac,1)) == +1
+          contjacQ = 0 * jacQG; %% water lines + water cont jac
+        end          	
       end
-
+    end
+      
     if iGasExist == +1
       jacTchunk = jacTchunk + jacTG;
       end
@@ -169,14 +187,14 @@ for cc = 1 : nchunk
     if length(intersect(iDoJac,gasids(jj))) == 1
       iQG = find(gasids(jj) == iDoJac);
       jacQchunk(iQG,:,:) = jacQG;
-      end    
+    end    
 
-    end    %%% loop on gases
+  end    %%% loop on gases
 
   absc(:,nlays) = absc(:,nlays)*rFracBot;
   if iDebug > 0
     abscAllChunks(chunkindex,:) = absc;  
-    end
+  end
 
   [rad25,therm25,zang,efine,rSol25,raaRad] = ...
      rtchunk_Tsurf_jac(prof, absc, freq , ropt0);
@@ -184,15 +202,15 @@ for cc = 1 : nchunk
        jac_downlook(freq,zang,efine,rSol25,therm25,absc,raaRad,...
                       jacQchunk,jacTchunk,prof,iDoJac);
   if iJacobOutput == 0
-     [aa,iNumLayer] = size(absc);
-     qjac = doQjacOutput(gasprofQG,qjac,iDoJac,0,iNumLayer,freq,rad25);
-   elseif iJacobOutput == 1
-     [aa,iNumLayer] = size(absc);
-     qjac = doQjacOutput(gasprofQG,qjac,iDoJac,1,iNumLayer,freq,rad25);
-     tjac = tjac .* (dbtdr(freq,rad25')'*ones(1,iNumLayer));
-     sjac = sjac .* (dbtdr(freq,rad25')');
-     ejac = ejac .* (dbtdr(freq,rad25')');
-     end
+    [aa,iNumLayer] = size(absc);
+    qjac = doQjacOutput(gasprofQG,qjac,iDoJac,0,iNumLayer,freq,rad25);
+  elseif iJacobOutput == 1
+    [aa,iNumLayer] = size(absc);
+    qjac = doQjacOutput(gasprofQG,qjac,iDoJac,1,iNumLayer,freq,rad25);
+    tjac = tjac .* (dbtdr(freq,rad25')'*ones(1,iNumLayer));
+    sjac = sjac .* (dbtdr(freq,rad25')');
+    ejac = ejac .* (dbtdr(freq,rad25')');
+  end
 
   qjacAllChunks(:,chunkindex,:) = qjac;
   tjacAllChunks(chunkindex,:)   = tjac;
@@ -204,7 +222,7 @@ for cc = 1 : nchunk
   radAllChunks(chunkindex) = rad25;
 
   iaa_kcomprstats_AllChunks = [iaa_kcomprstats_AllChunks; iaCountNumVec];
-  end
+end
 %%%%%%%%%%%%%%%%%%%% uncompression guts %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %profile off

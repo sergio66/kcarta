@@ -304,7 +304,7 @@ temperature, or +gas amount in $m$th layer)
 \section{Installing and running \kc}
 This is for the user that wants to install and use \kc as quickly as possible. 
 We purposely keep this user manual short, and ask the user to 
-examine the "user\_set*.m" codes in the \textcolor{blue}{Test} subdirectory 
+examine the "USER\_SET/user\_set*.m" codes in the \textcolor{blue}{Test} subdirectory 
 in great detail, so as to understand how to use the package. 
 
 \subsection{Distributing \kc}
@@ -403,7 +403,7 @@ files each span 25 \wn. We envisage the following :
 \end{verbatim}
 
 \textcolor{red}{It is the responsibiliy of the user to set fA,fB in 
-the "user\_set\_input*" files such that they only span $ONE$ spectral
+the "USER\_SET/user\_set\_input*" files such that they only span $ONE$ spectral
 range}. For example, one run covering 605-2830 \wn is fine, as is 
 another run covering 500-605 \wn. But the code as written will not permit
 a single run covering 500-2830 \wn.
@@ -447,13 +447,13 @@ following parameters : which HITRAN version to use, start/stop wavenumbers for
 the calculations, whether or not to do Jacobians, what output units for the
 Jacobians, what CKD version, and name of input rtp file.
 \begin{verbatim}
-user_set_input_downlook.m        parameters driving dokcarta_downlook.m
-user_set_input_opticaldepths.m   parameters driving dokcarta_opticaldepths.m
+user_set_input_downlook.m        parameters driving driver_dokcarta_downlook_radsNjacs.m
+user_set_input_opticaldepths.m   parameters driving driver_dokcarta_opticaldepths.m
 \end{verbatim}
 
 The user needs to supply paths to where the solar files, continuum files,
 nlte files, klayers executables, optical depth database and reference profiles
-are; this is controlled via $user\_set\_dirs.m$
+are; this is controlled via $USER\_SET/user\_set\_dirs.m$
 \begin{verbatim}
 user_set_dirs.m                  set up the paths to directories
 \end{verbatim}
@@ -461,8 +461,8 @@ user_set_dirs.m                  set up the paths to directories
 Finally the user can commence the computation, calling one or the other
 of the routines named below (which call relevant files from above).
 \begin{verbatim}
-dokcarta_downlook.m              compute RT
-dokcarta_opticaldepths.m         compute optical depths
+driver_dokcarta_downlook_radsNjacs.m              compute RT
+driver_dokcarta_opticaldepths.m         compute optical depths
 \end{verbatim}
 
 This subdir also includes two matlab files, containing radiances output

@@ -74,12 +74,28 @@ profileG = op_rtp_to_lbl2(1, refpro.glist, head, prof, refpro);
 [itlo,ithi,twlo,twhi,pi1Out] = temp_interp_weights(head,prof,refp);
 
 %% determine temp interp weights for each continuum chunk
+% freqX = (1:10000);  freqX = f0 + (freqX-1)*df;
+% copt.cvers = CKD;
+% copt.cdir  = cdir;
+% copt.cswt  = cswt;
+% copt.cfwt  = cfwt;
+% [ci1,ci2,ctw1,ctw2] = continuum_temp_interp_weights(profileG, freqX, copt);
 freqX = (1:10000);  freqX = f0 + (freqX-1)*df;
+UseCKDTemp  = '5';
+iUseCKDTemp = -1;
 copt.cvers = CKD;
+if str2num(CKD) < 0
+  iUseCKDemp = +1;
+  copt.cvers = UseCKDTemp;
+end
 copt.cdir  = cdir;
 copt.cswt  = cswt;
 copt.cfwt  = cfwt;
-[ci1,ci2,ctw1,ctw2] = continuum_temp_interp_weights(profileG, freqX, copt);
+[ci1,ci2,ctw1,ctw2,cjtwlo,cjtwhi] = ...
+   continuum_temp_interp_weights_jac(profileG, freqX, copt);
+if str2num(CKD) < 0
+  copt.cvers = CKD;
+end
 
 %tic
 %profile on -history
@@ -109,11 +125,16 @@ for cc = 1 : length(fchunk)
                                  profileG,ff,ropt0,refp,fr0,absc, prefix);
 
       iaCountNumVec(jj) = iNumVec;
-    
-      cont = contcalc2(profileG,freq,copt,ci1,ci2,ctw1,ctw2);
-      absc = absc + cont; % disp(' >>>>>>>>>>>>> Adding cont!!! <<<<<<<<<<<')
-      % absc = cont; disp(' >>>>>>>>>>>>> ONLY cont!!! <<<<<<<<<<<')
-      % absc = absc; disp(' >>>>>>>>>>>>> NO cont!!! <<<<<<<<<<<')
+
+      if str2num(copt.cvers) > 0
+        cont = contcalc2(profileG,freq,copt,-1,ci1,ci2,ctw1,ctw2);
+        absc = absc + cont; % disp(' >>>>>>>>>>>>> Adding cont!!! <<<<<<<<<<<')
+        % absc = cont; disp(' >>>>>>>>>>>>> ONLY cont!!! <<<<<<<<<<<')
+        % absc = absc; disp(' >>>>>>>>>>>>> NO cont!!! <<<<<<<<<<<')
+      else
+	disp('CKD = -1 so no continuum')
+	cont = 0 * absc;	
+      end	
 
     elseif gid == 2 & prof.solzen < 90 & ropt0.iNLTE == -2 & ...
        (ff(1) >= 2205 & ff(end) < 2405)

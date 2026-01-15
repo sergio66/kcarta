@@ -139,7 +139,7 @@ using H2004 and H2008.
 \subsection{Setting the paths}
 The user needs to supply paths to where the solar files, continuum files,
 nlte files, klayers executables, optical depth database and reference profiles
-are; this is controlled via \textcolor{blue}{$user\_set\_dirs.m$}
+are; this is controlled via \textcolor{blue}{$USER\_SET/user\_set\_dirs.m$}
 
 We will concentrate on the parameters that need to be set for kCARTA runs
 spanning 605-2830 \wn. The variables set in this file fall into three
@@ -208,7 +208,7 @@ Depending what the user wants to do, the user sets the following parameters
 in a separate file : which HITRAN version to use, start/stop wavenumbers for
 the calculations, whether or not to do Jacobians, what output units for the
 Jacobians, what CKD version, and name of input rtp file. We will concentrate
-on textcolor{blue}{user\_set\_input\_downlook.m}, the file used to generate 
+on textcolor{blue}{USER\_SET/user\_set\_input\_downlook.m}, the file used to generate 
 radiances and/or jacobians; the file used to generate optical depths is very similar.
 
 As above, the parameters set in the file can be divided into a number
@@ -279,10 +279,10 @@ fA,fB & start, stop wavenumbers & in \wn \\
 Finally the user can commence the computation, calling one or the other
 of the routines named below (which call relevant files from above).
 \begin{verbatim}
-dokcarta_downlook.m              compute RT
-dokcarta_opticaldepths.m         compute optical depths
+driver_dokcarta_downlook_radsNjacs.m              compute RT
+driver_dokcarta_opticaldepths.m         compute optical depths
 \end{verbatim}
-All the user has to do is make sure the correct user\_* files are called,
+All the user has to do is make sure the correct USER\_SET/user\_* files are called,
 at the top of these files.
 
 \section{VariablePressure \textcolor{red}{Different pressure layers}}

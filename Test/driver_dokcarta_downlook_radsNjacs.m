@@ -1,9 +1,15 @@
+addpath USER_SET
+
 %% user has set his/her inputs
 %user_set_input_breno
-user_set_input_downlook
+%user_set_input_downlook
 
+user_set_input_downlook_testjacs_Jan2026
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% user has set paths to files
-user_set_dirs 
+%user_set_dirs
+user_set_dirs_Jan2026
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 tic

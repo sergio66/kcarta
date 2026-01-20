@@ -1,8 +1,13 @@
-%% user has set his/her inputs
-user_set_input_opticaldepths
+addpath USER_SET
 
+%% user has set his/her inputs
+%user_set_input_opticaldepths
+user_set_input_opticaldepths_testjacs_Jan2026
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% user has set paths to files
-user_set_dirs 
+%user_set_dirs
+user_set_dirs_Jan2026
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 tic

@@ -58,6 +58,9 @@ if iDoBckGnd > 0
   raResults = raResultsTh + raResults;
   end
 
+iDebugX = iDebug;
+iDebug = +1;
+iDebug = -1;
 if iDebug == 1
   %      print *,iMMM,iM1,raaGeneral(1,iMMM),raaAllDT(1,iM1),raTemp(1),raResults(1),
   %     $         raaRad(1,iMMM),raaRadDT(1,iMMM),raaLay2Gnd(1,iMMM),raaOneMinusTau(1,iMMM)
@@ -66,3 +69,4 @@ if iDebug == 1
                  raResults(1)];
   fprintf(1,' %3i %3i %10.6e %10.6e %10.6e %10.6e %10.6f %10.6f %10.6f %10.6e \n',data);
   end
+iDebug = iDebugX;

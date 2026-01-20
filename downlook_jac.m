@@ -156,7 +156,7 @@ for cc = 1 : nchunk
     if length(intersect(iDoJac,gasids(jj))) == 1
       iQG = find(gasids(jj) == iDoJac);
       gasprofQG(iQG,:,:) = gasprofX;
-      end
+    end
 
     iaCountNumVec(jj) = iNumVec;
 
@@ -200,8 +200,10 @@ for cc = 1 : nchunk
      rtchunk_Tsurf_jac(prof, absc, freq , ropt0);
   [qjac,tjac,wgt,sjac,ejac] = ...
        jac_downlook(freq,zang,efine,rSol25,therm25,absc,raaRad,...
-                      jacQchunk,jacTchunk,prof,iDoJac);
-  if iJacobOutput == 0
+                    jacQchunk,jacTchunk,prof,iDoJac);
+  if iJacobOutput == -1
+    %% do nothing at all ... just raw jacs dr/ds  s=T or q
+  elseif iJacobOutput == 0
     [aa,iNumLayer] = size(absc);
     qjac = doQjacOutput(gasprofQG,qjac,iDoJac,0,iNumLayer,freq,rad25);
   elseif iJacobOutput == 1
@@ -233,7 +235,7 @@ rads.freqAllChunks             = freqAllChunks;
 rads.radAllChunks              = radAllChunks;
 rads.gaslist                   = gasids;    
 if iDebug > 0
-  rads.abscAllChunks             = abscAllChunks;
+  rads.abscAllChunks           = abscAllChunks;
   end
 rads.iaa_kcomprstats_AllChunks = iaa_kcomprstats_AllChunks;
 
@@ -242,3 +244,4 @@ jacs.qjacAllChunks = qjacAllChunks;
 jacs.sjacAllChunks = sjacAllChunks;
 jacs.tjacAllChunks = tjacAllChunks;
 jacs.wgtAllChunks  = wgtAllChunks;
+

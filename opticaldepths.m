@@ -97,11 +97,17 @@ profileG = op_rtp_to_lbl2(1, refpro.glist, head, prof, refpro);
 
 %% determine temp interp weights for each continuum chunk
 freqX = (1:10000);  freqX = f0 + (freqX-1)*df;
+CKD0 = CKD;
+if str2num(CKD) < 0
+  CKD = '1';
+end  
 copt.cvers = CKD;
 copt.cdir  = cdir;
 copt.cswt  = cswt;
 copt.cfwt  = cfwt;
 [ci1,ci2,ctw1,ctw2] = continuum_temp_interp_weights(profileG, freqX, copt);
+CKD = CKD0;
+copt.cvers = CKD;
 
 %tic
 %profile on -history
@@ -125,14 +131,14 @@ for cc = 1 : length(fchunk)
                                  profileG,ff,ropt0,refp,fr0,absc,prefix);
 
     iaCountNumVec(jj) = iNumVec;
-    
-    if gid == 1
+
+    if gid == 1 & str2num(copt.cvers) > 0
       if iBreakoutCont < 0
         cont = contcalc2(profileG,freq,copt,ci1,ci2,ctw1,ctw2);
       elseif iBreakoutCont == +1
         [cont,contS,contF]=contcalc2_S_F(profileG,freq,copt,ci1,ci2,ctw1,ctw2);
       end
-      absc = absc + cont; % disp(' >>>>>>>>>>>>> Adding cont!!! <<<<<<<<<<<')
+      absc = absc + cont; disp(' >>>>>>>>>>>>> Adding cont!!! <<<<<<<<<<<')
       % absc = cont; disp(' >>>>>>>>>>>>> ONLY cont!!! <<<<<<<<<<<')
       % absc = absc; disp(' >>>>>>>>>>>>> NO cont!!! <<<<<<<<<<<')
     end
@@ -162,10 +168,12 @@ clear k2AllChunks jacQGAllChunks jacTGAllChunks
 
 ods.gaslist                   = gasids;
 ods.freqAllChunks             = freqAllChunks;
-ods.abscTotalAllChunks        = abscAllChunks;
+ods.abscTotalAllChunks        = fliplr(abscAllChunks);
 if iBreakoutCont == 1 & length(intersect(1,gasids)== 1)
-  ods.selfAllChunks           = selfAllChunks;
-  ods.fornAllChunks           = fornAllChunks;
+  ods.selfAllChunks           = fliplr(selfAllChunks);
+  ods.fornAllChunks           = fliplr(fornAllChunks);
 end
 ods.iaa_kcomprstats_AllChunks = iaa_kcomprstats_AllChunks;
 
+disp(' ')
+disp('did fliplr of abscAllChunks, selfAllChunks,fornAllChunks')

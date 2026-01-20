@@ -25,16 +25,16 @@ kSolar = -1;
 if raSunAngles(iLay) < 90
   kSolar = 1;
   raaGeneral(:,iLyr) = raaGeneral(:,iLyr) + ...
-    raSunRefl.*raSun.*raTemp.*(1+rCos/rWsun);
-  end
+		       raSunRefl.*raSun.*raTemp.*(1+rCos/rWsun);
+end
 
 % include the EASY part of thermal contribution
 kThermal = -1;
 if raThermal(1) > 0
   kThermal = +1;
   raaGeneral(:,iLyr) = raaGeneral(:,iLyr) + ...
-     (1.0-raUseEmissivity)/pi.*raThermal.*raTemp;
-  end
+		       (1.0-raUseEmissivity)/pi.*raThermal.*raTemp;
+end
 
 % set raTemp1 to all zeros (since this is the bottom layer, there is no 
 % cumulative contribution
@@ -48,7 +48,7 @@ for iLyr = 2 : iNumLayer
   iJ1 = 1;
   raTemp = JacobTerm(iJ1,iLyr,raaLay2Sp);
   raaGeneral(:,iLyr) = raUseEmissivity.*raSurface.*raTemp;
-
+  
   % recall raTemp is raL2S from gnd to top
   if (kSolar > 0) 
     rWsun=cos(raSunAngles(iLay)*pi/180.0);
@@ -68,5 +68,5 @@ for iLyr = 2 : iNumLayer
   raTemp = JacobTerm(iJ1,iLyr,raaLay2Sp);
   raTemp1 = raTemp1 + raaOneMinusTau(:,iJ).*raaRad(:,iJ).*raTemp;
   raaGeneral(:,iLyr) = raaGeneral(:,iLyr) + raTemp1;
-
-  end
+  
+end

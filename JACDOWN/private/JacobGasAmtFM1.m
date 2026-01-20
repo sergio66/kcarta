@@ -51,11 +51,17 @@ if iDoBckGnd > 0
   raResults = raResultsTh + raResults;
   end
 
+iJunk = 1;
+iJunk = 8402;
+iDebugX = iDebug;
+iDebug = +1;
+iDebug = -1;
 if iDebug == 1
-  %      print *,iMMM,iM1,raaGeneral(1,iMMM),raaAllDT(1,iM1),raTemp(1),raResults(1),
-  %     $         raaRad(1,iMMM),raaRadDT(1,iMMM),raaLay2Gnd(1,iMMM),raaOneMinusTau(1,iMMM)
-  data = [-1 iLay raaGeneral(1,iLay) jacQG(1,iLay) raTemp(1) ...
-                 raaRad(1,iLay) raaRadDT(1,iLay) raaLay2Sp(1,iLay) raaOneMinusTau(1,iLay) ...
-                 raResults(1)];
+  %      print *,iMMM,iM1,raaGeneral(iJunk,iMMM),raaAllDT(iJunk,iM1),raTemp(iJunk),raResults(iJunk),
+  %     $         raaRad(iJunk,iMMM),raaRadDT(iJunk,iMMM),raaLay2Gnd(iJunk,iMMM),raaOneMinusTau(iJunk,iMMM)
+  data = [-1 iLay raaGeneral(iJunk,iLay) jacQG(iJunk,iLay) raTemp(iJunk) ...
+                 raaRad(iJunk,iLay) raaRadDT(iJunk,iLay) raaLay2Sp(iJunk,iLay) raaOneMinusTau(iJunk,iLay) ...
+                 raResults(iJunk)];
   fprintf(1,' %3i %3i %10.6e %10.6e %10.6e %10.6e %10.6f %10.6f %10.6f %10.6e \n',data);
   end
+iDebug = iDebugX;

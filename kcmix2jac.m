@@ -185,8 +185,8 @@ for gind = xyz : xyz
     % accumulate expanded absorptions
     if kpow == 1/4
       donk   = (B * kcmp1).^ 2;
-      od_gas = donk .^ 2;  % faster when kpow = 1/4
-      jacTG  = (B * kcmp1).*donk; % this is the cubic part
+      od_gas = donk .^ 2;         % (a**2)**2 is faster than a**4 : so this is faster when kpow = 1/4
+      jacTG  = (B * kcmp1).*donk; % this is the cubic part a*(a**2)
       jacX   = (B * jac1);        % this is d(K)/dT
     else
       od_gas = (B * kcmp1).^(1/kpow);  % the general case
@@ -197,8 +197,14 @@ for gind = xyz : xyz
 
     if length(intersect(iDoJac,gid)) == 1
       jacQG = od_gas./(ones(1e4,1)*gasQ');
+      if gid == 1
+	disp('>>>>>>>>>>>>>>>>>>>>>>>>>')
+        disp('   kcmix2jac.m saving junk.mat for G1')
+	disp('>>>>>>>>>>>>>>>>>>>>>>>>>')	
+        save junk.mat jacTG jacQG gasQ
+      end
     end
-
+    
     if (gid == 2)
       iChi = -1;
       if vchunk == 2255

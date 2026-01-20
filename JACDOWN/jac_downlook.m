@@ -98,6 +98,7 @@ for ii = 1 : length(iDoJac)
                         raaGeneral,raaGeneralTh,raaOneMinusTauTh);
      end
    end
+%% wahaha = squeeze(qjac(1,8402,1:10))
 
 if iDebug == 1
   fprintf(1,'\n temp d/dT : \n')
@@ -125,3 +126,23 @@ sjac = surface_temp_jacobian(raFreq,prof.stemp,efine,raaLay2Sp);
 ejac = surface_emis_jacobian(raFreq,prof.stemp,efine,raThermal,raaLay2Sp);
 
 fprintf(1,' \n');
+
+
+iDumpJacOut = +1;
+if iDumpJacOut > 0
+  
+  thedir = pwd;
+  thedumpname = ['temp_jacobian_matrices_' num2str(round(raFreq(1))) '.mat'];
+  thedumpname = [thedir '/' thedumpname];
+  disp('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+  disp('DUMPING OUT TEMP JAC MATRICES')
+  disp('   raaRad,raaTau,raaOneMinusTau,raaLay2Gnd,raaGeneral,raaAllDT,raaaAllDQ')
+  fprintf(1,'   into %s \n',thedumpname)
+  disp(' ')
+  disp(' compare to the F90 (kcarta) code in ~/git/kcarta_gen/SRCv1.22_f90/jac_down.f90')  
+  disp('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+  
+  comment = 'see /home/sergio/git/kcarta/JACDOWN/jac_downlook.m';
+  saver = ['save ' thedumpname ' raaRad raaTau raaOneMinusTau raaLay2Gnd raaGeneral jacTG jacQG'];
+  eval(saver);
+end

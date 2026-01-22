@@ -1,0 +1,26 @@
+01/07/2026      Lots of jacobian diagnostic switches available (but you have to turn them on "by hand")
+                Line 202    ../kcmix2jac.m : iDumpJac = +1 dumps out the RAW d/dq.d/dT for WV after uncompression
+		Line 154     ../JACDOWN/jac_downlook.m : iDumpJac = +1 dumps out all relevent
+			             jacobian intermediate matrices eg raaGeneral,raaTau,raaRad,raaLay2Space
+				     and then the jacDQ,jacDT from RTA derivatives
+		Line 368     ../JACDOWN/jac_downlook.m : iReadF90jac = +1 reads in saved relevent
+		             jacobian intermediate matrices eg raaGeneral,raaTau,raaRad,raaLay2Space
+			     from f90 kCARTA so the Matlab kcmix code can compute jacobians using that information!
+			     See ~/git/kcarta_gen//MATLAB/compare_matlab_f90_dumpjacoutput.m
+			     Then if you have previsouly sved in memory radOut0,jacsOut0 (from a pure kcmix run) you compare
+
+                               iLay = 2;
+			       pcolor(radsOut.freqAllChunks,1:97,jacsOut.tjacAllChunks' - jacsOut0.tjacAllChunks');
+			         shading interp; colormap jet; colorbar
+			       plot(radsOut.freqAllChunks,jacsOut.tjacAllChunks(:,iLay),'b.-',...
+			            radsOut.freqAllChunks,jacsOut0.tjacAllChunks(:,iLay))
+			       
+                               pcolor(radsOut.freqAllChunks,1:97,squeeze(jacsOut.qjacAllChunks(1,:,:) - jacsOut0.qjacAllChunks(1,:,:))');
+			         shading interp; colormap jet; colorbar
+			       plot(radsOut.freqAllChunks,squeeze(jacsOut.qjacAllChunks(1,:,iLay)),'b.-',...
+			            radsOut.freqAllChunks,squeeze(jacsOut0.qjacAllChunks(1,:,iLay)))
+
+
+07/01/2014		Main code written, mostly following Howard Motteler algorithms of uncompresiom
+                        Jacobian code (or AIRS and variable) pressure leveles copied from f77 kCARTA
+

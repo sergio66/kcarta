@@ -65,6 +65,7 @@ if iDebug == 1
 [raaRadDT,raaOneMinusTau,raaTau,raaLay2Gnd] = ...
   DoPlanck_LookDown(prof,raFreq,zang,absc,raVtemp,raaRad);
 
+
 %disp('initializing Jacobian loops ...')
 raSunAngles = vaconv(prof.solzen,prof.zobs,prof.palts);
 raSurface = ttorad(raFreq,prof.stemp);
@@ -81,6 +82,35 @@ if ((kThermal >=  0) & (kThermalJacob >  0))
   [raaOneMinusTauTh,raaGeneralTh] = Loop_thermaldown(prof.satzen,zang,...
                                           absc,raFreq,raaRad,raaLay2Gnd);
   end
+
+iReadF90jac = +1;
+iReadF90jac = -1;
+if iReadF90jac > 0
+  disp('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WARNING <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+  disp('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WARNING <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+  disp('reading in f90 jacobian intermediate matrices eg raaGeneral,raaTau,raaRad,raaLay2Space')
+  disp('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WARNING <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+  disp('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WARNING <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')  
+  load /home/sergio/git/kcarta_gen/WORK/f90kcartajacobian_into_x97layers_955.mat
+  x97
+  disp('hmmm, what is raaRadDT in kcmix code???')
+  whos raaOneMinusTau raaTau raaLay2Gnd raaRad raaRadDT raaGeneral  jacQG jacTG
+  
+  raaOneMinusTau = x97.raaOneMinusTau;  disp('replaced raaOneMinusTau')
+  raaTau         = x97.raaTau;          disp('replaced raaTau')
+  
+  raaLay2Gnd     = x97.raaLay2Gnd;      disp('replaced raaLay2Gnd')
+  raaLay2Sp      = x97.raaLay2Sp;       disp('replaced raaLay2Sp')    %%% >>>>>
+  
+  raaRad         = x97.raaRad;          disp('replaced raaRad')
+  raaRadDT       = x97.raaRadDT;        disp('replaced raaRadDT')  
+  
+  raaGeneral     = x97.raaGeneral;      disp('replaced raaGeneral')   %%% >>>
+  absc            = x97.absc;           disp('replaced absc')
+  
+  jacQG(1,:,:)   = x97.jacQG;           disp('replaced jacQG')
+  jacTG          = x97.jacTG;           disp('replaced jacTG')
+end
 
 for ii = 1 : length(iDoJac)
   if iDebug == 1
@@ -127,10 +157,18 @@ ejac = surface_emis_jacobian(raFreq,prof.stemp,efine,raThermal,raaLay2Sp);
 
 fprintf(1,' \n');
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 iDumpJacOut = +1;
-if iDumpJacOut > 0
-  
+iDumpJacOut = -1;
+
+if iDumpJacOut > 0 & iReadF90jac > 0
+  disp('you kidding me?? iReadF90jac > 0 so you cannot have iDumpJacOut > 0');
+  disp('resetting iReadF90jac = -1')
+  iReadF90jac = -1;
+end
+
+if iDumpJacOut > 0 & iReadF90jac < 0
   thedir = pwd;
   thedumpname = ['temp_jacobian_matrices_' num2str(round(raFreq(1))) '.mat'];
   thedumpname = [thedir '/' thedumpname];
@@ -143,6 +181,6 @@ if iDumpJacOut > 0
   disp('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
   
   comment = 'see /home/sergio/git/kcarta/JACDOWN/jac_downlook.m';
-  saver = ['save ' thedumpname ' raaRad raaTau raaOneMinusTau raaLay2Gnd raaGeneral jacTG jacQG'];
+  saver = ['save ' thedumpname ' raaRad raaRadDT     raaTau raaOneMinusTau     raaLay2Gnd raaLay2Sp      raaGeneral absc       jacTG jacQG'];
   eval(saver);
 end

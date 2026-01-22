@@ -195,12 +195,13 @@ for gind = xyz : xyz
 
     jacTG = 4*jacX.*jacTG;
 
+    iDumpJac = -1;
     if length(intersect(iDoJac,gid)) == 1
       jacQG = od_gas./(ones(1e4,1)*gasQ');
-      if gid == 1
-	disp('>>>>>>>>>>>>>>>>>>>>>>>>>')
-        disp('   kcmix2jac.m saving junk.mat for G1')
-	disp('>>>>>>>>>>>>>>>>>>>>>>>>>')	
+      if gid == 1 & iDumpJac > 0
+	disp('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        disp('   kcmix2jac.m saving acTG jacQG gasQ : raw WV jacobians after uncompression into junk.mat')
+	disp('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')	
         save junk.mat jacTG jacQG gasQ
       end
     end

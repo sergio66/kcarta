@@ -135,7 +135,7 @@ CKD = '1';
 
 % these next two define the input dir and rtp file
 % iProfRun is which of the rtp profiles to run
-dirin = '/umbc/rs/pi_sergio/WorkDirDec2025/kcarta_gen/WORK/'
+dirin = '/umbc/rs/pi_sergio/WorkDirDec2025/kcarta_gen/WORK/';
   fin   = 'ecmwf_airicrad_day092_clear_unitemiss_profile_4758.op.rtp';
   iProfRun = 1;
 

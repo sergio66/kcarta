@@ -65,7 +65,6 @@ if iDebug == 1
 [raaRadDT,raaOneMinusTau,raaTau,raaLay2Gnd] = ...
   DoPlanck_LookDown(prof,raFreq,zang,absc,raVtemp,raaRad);
 
-
 %disp('initializing Jacobian loops ...')
 raSunAngles = vaconv(prof.solzen,prof.zobs,prof.palts);
 raSurface = ttorad(raFreq,prof.stemp);
@@ -112,12 +111,14 @@ if iReadF90jac > 0
   jacTG          = x97.jacTG;           disp('replaced jacTG')
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 for ii = 1 : length(iDoJac)
   if iDebug == 1
     fprintf(1,'\n gas  d/dq : jacID%2i \n',ii)
   else
     fprintf(1,'\n gas  d/dq : ')
-    end
+  end
   for iLay=1 : iNumLayer
     rWeight = 1;
     fprintf(1,'.')
@@ -126,31 +127,35 @@ for ii = 1 : length(iDoJac)
                         raaLay2Sp,raThermal,raaLay2Gnd,...
                         prof.satzen,zang,...
                         raaGeneral,raaGeneralTh,raaOneMinusTauTh);
-     end
-   end
+  end
+end
 %% wahaha = squeeze(qjac(1,8402,1:10))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if iDebug == 1
   fprintf(1,'\n temp d/dT : \n')
 else
   fprintf(1,'\n temp d/dT : ')
-  end
+end
 for iLay=1 : iNumLayer
-  fprintf(1,'.')
   rWeight = 1.0;
+  fprintf(1,'.')
   tjac(:,iLay) = JacobTempFM1(iLay,raFreq,raaRad,raaRadDT,efine,...
                    raaOneMinusTau,raaTau,jacTG,...
                    raaLay2Sp,raThermal,raaLay2Gnd,...
                    prof.satzen,zang,...
                    raaGeneral,raaGeneralTh,raaOneMinusTauTh);
-   end
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 fprintf(1,'\n wgt       : ')
 for iLay=1 : iNumLayer
   fprintf(1,'.')
   rWeight = 1.0;
   wgt(:,iLay) = wgtfcndown(iLay,prof.satzen,zang,raaLay2Sp,absc);
-  end
+end
 
 sjac = surface_temp_jacobian(raFreq,prof.stemp,efine,raaLay2Sp);
 ejac = surface_emis_jacobian(raFreq,prof.stemp,efine,raThermal,raaLay2Sp);

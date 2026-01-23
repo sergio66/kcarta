@@ -1,3 +1,8 @@
+01/21/2025      iPrintLocalAngle in rtchunk_Tsurf_jac.m can toggle on/off printing of local angle changing trough the 100 layers
+                for comparison against f90 kCARTA
+		
+01/21/2026      Can send in "gasidlist" to downlook_jac.m by setting it in USER_SER/set_driver+blah.m
+
 01/07/2026      Lots of jacobian diagnostic switches available (but you have to turn them on "by hand")
                 Line 202    ../kcmix2jac.m : iDumpJac = +1 dumps out the RAW d/dq.d/dT for WV after uncompression
 		Line 154     ../JACDOWN/jac_downlook.m : iDumpJac = +1 dumps out all relevent

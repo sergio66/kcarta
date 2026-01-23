@@ -70,14 +70,17 @@ rAngleY = saconv(prof.satzen, rHeight);   %% THIS SHOULD BE PROF.SCANANG!
 zang = zang(1:prof.nlevs-1);
 
 %plot(prof.palts(1:length(zang))/1000,zang,'o-'); xlabel('Lay Hgt (km)'); ylabel('Local angle (deg)');
-disp(' ')
-disp('Lay Hgt (km)     Local angle (deg)');
-disp('----------------------------------');
-ix = [1:5  length(zang)-5:length(zang)];
-wah = [prof.palts(ix(01:05))/1000 zang(ix(01:05))];fprintf(1,'%8.3f   %8.3f \n',wah');
-disp('    .....     .....')
-wah = [prof.palts(ix(06:10))/1000 zang(ix(06:10))];fprintf(1,'%8.3f   %8.3f \n',wah');
-disp(' ')
+iPrintLocalAngle = -1;
+if iPrintLocalAngle > 0
+  disp(' ')
+  disp('Lay Hgt (km)     Local angle (deg)');
+  disp('----------------------------------');
+  ix = [1:5  length(zang)-5:length(zang)];
+  wah = [prof.palts(ix(01:05))/1000 zang(ix(01:05))];fprintf(1,'%8.3f   %8.3f \n',wah');
+  disp('    .....     .....')
+  wah = [prof.palts(ix(06:10))/1000 zang(ix(06:10))];fprintf(1,'%8.3f   %8.3f \n',wah');
+  disp(' ')
+end
 
 rtherm  = ropt.rtherm;
 rsolar  = ropt.rsolar;	

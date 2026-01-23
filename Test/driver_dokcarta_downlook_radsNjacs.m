@@ -32,13 +32,21 @@ for ip = iProfRun
   [head, prof] = subset_rtp(h, p, h.glist, [], ip);
   [nlays,prof,rFracBot,ropt0] = initialize_kcmix(prof,iDownLook,ropt0);
   aux_struct = auxiliary_set(fA,fB,nlays,rFracBot,CKD,cswt,cfwt,refp);
+  if exist('gasidlist')
+    disp('gasidlist exists ... so using that')
+    aux_struct.gasidlist = gasidlist;
+  end
   if iDoJac(1) > 0
-    [radsOut,jacsOut] = downlook_jac(head,prof,aux_struct,ropt0,iDoJac,iJacobOutput);
+    [radsOut,jacsOut,gasinfo_per_chunk] = downlook_jac(head,prof,aux_struct,ropt0,iDoJac,iJacobOutput);
   else
     [radsOut] = downlook_nojac(head,prof,aux_struct,ropt0);
     end
   end
 
+if iDoJac(1) > 0
+  stuff.gasinfo_per_chunk = gasinfo_per_chunk;
+  %% so you can look at eg stuff.gasinfo_per_chunk.info{4} and it will tell you wchunk followed by gases used
+end
 stuff.freqs = [fA fB]; stuff.input_rtpfile = [dirin '/' fin];
 stuff.layersprof = prof;  stuff.iDoJac = iDoJac;   stuff.iProfRun = iProfRun;
 stuff.iJacobOutput = iJacobOutput;

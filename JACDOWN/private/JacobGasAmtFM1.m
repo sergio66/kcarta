@@ -49,7 +49,7 @@ if iDoBckGnd > 0
   %plot(1:10000,raResults,1:10000,raResultsTh,'g')
   %pause(0.1)
   raResults = raResultsTh + raResults;
-  end
+end
 
 iJunk = 1;
 iJunk = 8402;

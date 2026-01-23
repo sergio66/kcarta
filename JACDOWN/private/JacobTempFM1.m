@@ -1,5 +1,5 @@
 % this subroutine does the Jacobians wrt layer temp
-function raResults = JacobGasAmtFM1(...
+function raResults = JacobTempFM1(...
          iLay,raFreq,raaRad,raaRadDT,raUseEmissivity,...
          raaOneMinusTau,raaTau,jacTG,raaLay2Sp,...
          raThermal,raaLay2Gnd,rSatAngle,raLayAngles,raaGeneral,...
@@ -31,16 +31,15 @@ if (iLay < iNumLayer)
   iJ1 = iLay;
   iJp1 = iLay+1;
   raEmittance = raTemp.*raaRad(:,iJ1).*raaLay2Sp(:,iJ1) + ...
-                raaOneMinusTau(:,iJ1).*raaRadDT(:,iJ1)/  ...
-                    rSec.*raaLay2Sp(:,iJp1);
+                raaOneMinusTau(:,iJ1).*raaRadDT(:,iJ1)/rSec.*raaLay2Sp(:,iJp1);
   raResults = raResults + raEmittance;
 elseif (iLay == iNumLayer) 
   % do the topmost layer correctly
   iJ1 = iLay;
-  raEmittance = raTemp.*raaRad(:,iJ1).*raaLay2Sp(:,iJ1)+ ...
+  raEmittance = raTemp.*raaRad(:,iJ1).*raaLay2Sp(:,iJ1) + ...
                 raaOneMinusTau(:,iJ1).*raaRadDT(:,iJ1)/rSec;
   raResults = raResults + raEmittance;
-  end
+end
 
 % now multiply results by the 1/cos(viewing angle) factor
 if (abs(rSec-1.00000) >=  1.0e-5) 
@@ -56,11 +55,11 @@ if iDoBckGnd > 0
   %plot(1:10000,raResults,1:10000,raResultsTh,'r')
   %title(num2str(iLay)); pause(0.1); 
   raResults = raResultsTh + raResults;
-  end
+end
 
 iDebugX = iDebug;
-iDebug = +1;
 iDebug = -1;
+iDebug = +1;
 if iDebug == 1
   %      print *,iMMM,iM1,raaGeneral(1,iMMM),raaAllDT(1,iM1),raTemp(1),raResults(1),
   %     $         raaRad(1,iMMM),raaRadDT(1,iMMM),raaLay2Gnd(1,iMMM),raaOneMinusTau(1,iMMM)
@@ -70,3 +69,4 @@ if iDebug == 1
   fprintf(1,' %3i %3i %10.6e %10.6e %10.6e %10.6e %10.6f %10.6f %10.6f %10.6e \n',data);
   end
 iDebug = iDebugX;
+

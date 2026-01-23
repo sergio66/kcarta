@@ -112,7 +112,11 @@ iMatlab_vs_f77 = -1;   % use f77 version
 % fA and fB are start and stop wavenumbers
 fA = 0855;  fB = 1055;
 fA = 0855;  fB = 0980;
-fA = 0955;  fB = 0980; 
+fA = 0955;  fB = 0980;
+fA = 1405;  fB = 1505; 
+fA = 1205;  fB = 1305;
+fA = 705;   fB = 1505;
+fA = 905;   fB = 930;
 
 % iDoJac tells controls the jacobians gasids (-1 for none)
 %iDoJac = [1 2];        %% WV (includes continuum) and CO2
@@ -127,6 +131,7 @@ iJacobOutput = -1;        %% dr/dT,  dr/dq
 CKD = '6';
 CKD = '5';
 CKD = '-1';
+CKD = '1';
 
 % these next two define the input dir and rtp file
 % iProfRun is which of the rtp profiles to run
@@ -138,3 +143,6 @@ dirin = '/umbc/rs/pi_sergio/WorkDirDec2025/kcarta_gen/WORK/'
 %   example iNLTE = -1; % SARTA
 %   example iNLTE = -2; % kCARTA Compressed
 iNLTE = -1;
+
+gasidlist = [1 2 3 4 5 6 9 12];
+gasidlist = -1;

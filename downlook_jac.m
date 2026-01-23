@@ -1,5 +1,4 @@
-function [rads,jacs] = ...
-    matlab_kcarta_downlook_jac(head,prof,aux_struct,ropt0,iDoJac,iJacobOutput);
+function [rads,jacs,gasinfo_per_chunk] = downlook_jac(head,prof,aux_struct,ropt0,iDoJac,iJacobOutput);
 % function 
 %   [rads,jacs] = ...
 %  matlab_kcarta_downlook_jac(head,prof,aux_struct,ropt0,iDoJac,iJacobOutput)
@@ -30,9 +29,10 @@ function [rads,jacs] = ...
 %     iJacobOutput = +1;        %% dBT/dT, dBT/dq*q
 %
 % output
-%   rads.freqAllChunks                  1x20000              freq
-%   rads.radAllChunks                   20000x1              radiances
-%   rads.iaa_kcomprstats_AllChunks          2x73             Sing Vectors stats
+%   gasinfo_per_chunk                     structure            gives which gases were used in uncompressiom
+%   rads.freqAllChunks                    1x20000              freq
+%   rads.radAllChunks                     20000x1              radiances
+%   rads.iaa_kcomprstats_AllChunks          2x73               Sing Vectors stats
 %     jacs.ejacAllChunks                  20000x1              emissivity jac
 %     jacs.qjacAllChunks                  2x20000x96           gas jacs
 %     jacs.sjacAllChunks                  20000x1              stemp jac
@@ -69,6 +69,12 @@ iGasDebug = 2;
 %gasids = [[1 : 29],[51 : 63]];
 load(refp);
 gasids = refpro.glist;
+if isfield(aux_struct,'gasidlist')
+  gasids = aux_struct.gasidlist;
+  if gasids(1) == -1
+    gasids = refpro.glist;
+  end
+end
 
 % edit this list to only keep gases you DO want!
 % gasids = 1
@@ -120,13 +126,20 @@ end
 %tic
 %profile on -history
 
+gasinfo_per_chunk = struct;
+
 for cc = 1 : nchunk
+  
   iaCountNumVec = [];
 
   ff = fchunk(cc);
   fr0 = ff + (0:9999)*df;
   fprintf(1,'doing chunk %4i \n',ff(1));
 
+  infocnt = 1;
+  theinfo(1) = ff;
+  infocnt = infocnt + 1;
+  
   absc = zeros(10000,nlays);
 
   jacTchunk = zeros(10000,nlays);
@@ -151,7 +164,11 @@ for cc = 1 : nchunk
     [absc,freq,iNumVec,gasprofX,jacTG,jacQG,iGasExist] = ...
                kcmix2jac(itlo,ithi,twlo,twhi,jtwlo,jtwhi,pi1Out,gid,iDoJac, ...
                               profileG,ff,ropt0,refp,fr0,absc,prefix);
-
+    if iGasExist > 0
+      theinfo(infocnt) = gid;
+      infocnt = infocnt + 1;
+    end
+    
     [aa,iNumLayer] = size(absc);
     if length(intersect(iDoJac,gasids(jj))) == 1
       iQG = find(gasids(jj) == iDoJac);
@@ -224,6 +241,9 @@ for cc = 1 : nchunk
   radAllChunks(chunkindex) = rad25;
 
   iaa_kcomprstats_AllChunks = [iaa_kcomprstats_AllChunks; iaCountNumVec];
+
+  gasinfo_per_chunk.info{cc} = theinfo;
+  
 end
 %%%%%%%%%%%%%%%%%%%% uncompression guts %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

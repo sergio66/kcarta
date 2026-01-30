@@ -25,7 +25,25 @@
 			       plot(radsOut.freqAllChunks,squeeze(jacsOut.qjacAllChunks(1,:,iLay)),'b.-',...
 			            radsOut.freqAllChunks,squeeze(jacsOut0.qjacAllChunks(1,:,iLay)))
 
-
+01/07/2026      Just letting you know/reminding you about code for testing finite difference jacs
+                %% testing finite diffence jacobians
+                %% Test/driver_dokcarta_downlook_radsNjacs.m:23:global iDebug
+                %% Test/driver_dokcarta_downlook_radsNjacs.m:25:%iDebug = +1;
+                %% Test/driver_dokcarta_downlook_radsNjacs.m:26:%iDebug = +1090;
+                %% Test/driver_dokcarta_downlook_radsNjacs.m:27:iDebug = +0;
+                %% Test/driver_dokcarta_downlook_radsNjacs.m:28:%iDebug = +1;
+                %% testing finite diffence jacobians
+                xnw +154 downlook_jac.m		
+                  if iDebug > 1000 & iDebug < 2000
+                    fprintf(1,'perturb T( %3i ) by 1 K \n',ind_perturb);
+                    profileG.mtemp(ind_perturb) = profileG.mtemp(ind_perturb) + 1;
+                    profileG.mtemp(ind_perturb)
+                  elseif iDebug > 2000 & gid == iGasDebug
+                    fprintf(1,'perturb Q %2i (%3i) by 10 percent \n',iGasDebug,ind_perturb);
+                    profileG.gamnt(ind_perturb)*0.1
+                    profileG.gamnt(ind_perturb) = profileG.gamnt(ind_perturb)*1.1;
+                    end
+  
 07/01/2014		Main code written, mostly following Howard Motteler algorithms of uncompresiom
                         Jacobian code (or AIRS and variable) pressure leveles copied from f77 kCARTA
 

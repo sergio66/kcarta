@@ -150,6 +150,13 @@ for cc = 1 : nchunk
     gid = gasids(jj);
     %fprintf(1,'chunk %4i, doing gasID = %3i \n',ff,gid);
 
+    %% testing finite diffence jacobians
+    %% Test/driver_dokcarta_downlook_radsNjacs.m:23:global iDebug
+    %% Test/driver_dokcarta_downlook_radsNjacs.m:25:%iDebug = +1;
+    %% Test/driver_dokcarta_downlook_radsNjacs.m:26:%iDebug = +1090;
+    %% Test/driver_dokcarta_downlook_radsNjacs.m:27:iDebug = +0;
+    %% Test/driver_dokcarta_downlook_radsNjacs.m:28:%iDebug = +1;
+    %% testing finite diffence jacobians
     if iDebug > 1000 & iDebug < 2000
       fprintf(1,'perturb T( %3i ) by 1 K \n',ind_perturb);
       profileG.mtemp(ind_perturb) = profileG.mtemp(ind_perturb) + 1;
@@ -159,7 +166,8 @@ for cc = 1 : nchunk
       profileG.gamnt(ind_perturb)*0.1
       profileG.gamnt(ind_perturb) = profileG.gamnt(ind_perturb)*1.1;
       end
-
+    %% testing finite diffence jacobians
+    
     iGasExist = -1;
     [absc,freq,iNumVec,gasprofX,jacTG,jacQG,iGasExist] = ...
                kcmix2jac(itlo,ithi,twlo,twhi,jtwlo,jtwhi,pi1Out,gid,iDoJac, ...
